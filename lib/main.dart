@@ -47,6 +47,11 @@ class MyAppState extends ChangeNotifier {
     current = WordPair("Hi", "ma");
     notifyListeners();
   }
+
+  void removePair(pair) {
+    favorites.remove(pair);
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatelessWidget {
@@ -62,24 +67,8 @@ class MyHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             BigCard(pair: pair),
-            Row(
-              spacing: 5,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                    onPressed: () {
-                      appState.toggleFavorite();
-                      print(appState.favorites);
-                    },
-                    child: Text("Like")),
-                ElevatedButton(
-                    onPressed: () {
-                      appState.getNext();
-                    },
-                    child: Text("Next")),
-              ],
-            ),
-            Text('${appState.favorites.length}'),
+            Buttons(appState: appState),
+            Text('${appState.favorites.length} words:'),
             Column(
               children: appState.favorites.map((wordPair) {
                 return Text('${wordPair.first} ${wordPair.second}');
@@ -88,6 +77,36 @@ class MyHomePage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class Buttons extends StatelessWidget {
+  const Buttons({
+    super.key,
+    required this.appState,
+  });
+
+  final MyAppState appState;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 5,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+            onPressed: () {
+              appState.toggleFavorite();
+              print(appState.favorites);
+            },
+            child: Text("Like")),
+        ElevatedButton(
+            onPressed: () {
+              appState.getNext();
+            },
+            child: Text("Next")),
+      ],
     );
   }
 }
